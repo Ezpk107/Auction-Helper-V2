@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auction Price Helper</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #f4f4f7, #e9ecf1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      max-width: 420px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-wrapper {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .item-row input,
+    .form-group input {
+      flex-grow: 1;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      background-color: #fff;
+      transition: border 0.3s ease;
+    }
+
+    .item-row input {
+      border-radius: 12px 0 0 12px;
+      border-right: none;
+    }
+
+    .form-group input:focus,
+    .item-row input:focus {
+      border-color: #007aff;
+      outline: none;
+      background-color: #fdfdff;
+    }
+
+    .remove-btn {
+      background: #ff3b30;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.75rem 1rem;
+      border-radius: 0 12px 12px 0;
+      height: 100%;
+    }
+
+    .fee-note {
+      font-size: 0.8rem;
+      color: #267a2d;
+      margin-top: 0.25rem;
+      padding-left: 0.25rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      font-weight: 500;
+      background-color: #007aff;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 2rem 0;
+    }
+
+    #results p {
+      font-size: 1.1rem;
+      color: #222;
+      margin-bottom: 0.75rem;
+    }
+
+    #results span {
+      font-weight: 600;
+      color: #007aff;
+    }
+
+    #exchangeNotification {
+      background-color: #e6f9e6;
+      border: 1px solid #b2e2b2;
+      color: #267a2d;
+      padding: 0.75rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Auction Price Helper</h1>
+    <div id="exchangeNotification">✅ CNY exchange rate automatically retrieved.</div>
+
+    <div class="form-group">
+      <label for="exchangeRate">CNY to USD Exchange Rate:</label>
+      <input type="number" id="exchangeRate" value="0.138" />
+    </div>
+
+    <div class="form-group">
+      <label for="itemPrices">Shopping Cart (up to 8 items):</label>
+      <div id="itemPrices"></div>
+      <button id="addItemBtn">+ Add Item</button>
+    </div>
+
+    <div class="form-group">
+      <label for="cnyValue">CNY Total + Fees:</label>
+      <input type="number" id="cnyValue" />
+    </div>
+
+    <div class="form-group">
+      <label for="usdPer32020">$ per 3/20/20 SC:</label>
+      <input type="number" id="usdPer32020" value="42" />
+    </div>
+
+    <div class="form-group">
+      <label for="fgPer32020">FG per 3/20/20 SC:</label>
+      <input type="number" id="fgPer32020" value="6200" />
+    </div>
+
+    <hr />
+    <div id="results">
+      <p>Total CNY: <span id="totalCny">-</span></p>
+      <p>FG: <span id="fgResult">-</span></p>
+      <p>USD: <span id="usdResult">-</span></p>
+    </div>
+    <p style="text-align:center; font-size: 0.9rem; margin-top: 1rem; color: #888;">
+      Designed by <a href="https://forums.d2jsp.org/user.php?i=1201392" target="_blank" style="color: #007aff; text-decoration: none; font-weight: 500;">Ezpk107</a>
+    </p>
+  </div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      const notice = document.getElementById('exchangeNotification');
+      if (notice) notice.style.display = 'block';
+    }, 500);
+
+    const itemPrices = document.getElementById('itemPrices');
+    const addItemBtn = document.getElementById('addItemBtn');
+    let itemCount = 0;
+    const maxItems = 8;
+
+    function addItemField() {
+      if (itemCount >= maxItems) return;
+      itemCount++;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'item-wrapper';
+
+      const row = document.createElement('div');
+      row.className = 'item-row';
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.placeholder = `Item ${itemCount} Price (CNY)`;
+      input.addEventListener('input', updateCnyTotal);
+
+      const feeNote = document.createElement('div');
+      feeNote.className = 'fee-note';
+      feeNote.textContent = '';
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.textContent = '✕';
+      removeBtn.title = 'Remove item';
+      removeBtn.onclick = () => {
+        itemPrices.removeChild(wrapper);
+        itemCount--;
+        updateCnyTotal();
+      };
+
+      row.appendChild(input);
+      row.appendChild(removeBtn);
+      wrapper.appendChild(row);
+      wrapper.appendChild(feeNote);
+      itemPrices.appendChild(wrapper);
+      updateCnyTotal();
+    }
+
+    function updateCnyTotal() {
+      const wrappers = itemPrices.querySelectorAll('.item-wrapper');
+      let totalCny = 0;
+
+      wrappers.forEach(wrapper => {
+        const input = wrapper.querySelector('input');
+        const feeNote = wrapper.querySelector('.fee-note');
+        const base = parseFloat(input.value) || 0;
+        let fee = 0;
+        let note = '';
+
+        if (base >= 250) {
+          fee = base * 0.10;
+          note = '+10% fee applied';
+        } else if (base > 0) {
+          fee = 20;
+          note = '+20 CNY fee applied';
+        }
+
+        feeNote.textContent = note;
+        totalCny += base + fee;
+      });
+
+      document.getElementById('cnyValue').value = totalCny.toFixed(2);
+      document.getElementById('totalCny').textContent = totalCny.toFixed(2);
+
+      const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 0;
+      const usdPer32020 = parseFloat(document.getElementById('usdPer32020').value) || 0;
+      const fgPer32020 = parseFloat(document.getElementById('fgPer32020').value) || 0;
+
+      const usdTotal = totalCny * exchangeRate;
+      const fgTotal = usdPer32020 && fgPer32020 ? (usdTotal / usdPer32020) * fgPer32020 : 0;
+
+      document.getElementById('usdResult').textContent = usdTotal.toFixed(2);
+      document.getElementById('fgResult').textContent = Math.round(fgTotal).toLocaleString();
+    }
+
+    document.getElementById('usdPer32020').addEventListener('input', updateCnyTotal);
+    document.getElementById('fgPer32020').addEventListener('input', updateCnyTotal);
+    document.getElementById('exchangeRate').addEventListener('input', updateCnyTotal);
+    addItemBtn.addEventListener('click', addItemField);
+    addItemField();
+  });
+</script>
+</body>
+</html>
