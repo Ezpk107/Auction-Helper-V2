@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +26,7 @@
       padding: 2rem;
       border-radius: 24px;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
-      max-width: 420px;
+      max-width: 480px;
       width: 100%;
     }
 
@@ -37,6 +36,13 @@
       color: #1a1a1a;
       text-align: center;
       margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 1rem;
     }
 
     .form-group {
@@ -138,70 +144,534 @@
     }
 
     #exchangeNotification {
-      background-color: #e6f9e6;
-      border: 1px solid #b2e2b2;
-      color: #267a2d;
       padding: 0.75rem;
       border-radius: 12px;
       font-size: 0.95rem;
       margin-bottom: 1.25rem;
       display: none;
+      margin-top: 1rem;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    #exchangeNotification.success-notification {
+      background-color: #e6f9e6;
+      border: 1px solid #b2e2b2;
+      color: #267a2d;
+    }
+    
+    #exchangeNotification.error-notification {
+      background-color: #ffebeb;
+      border: 1px solid #ffb2b2;
+      color: #d42f2f;
+    }
+
+    .exchange-rates-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .exchange-rates-grid .form-group {
+      margin-bottom: 0.5rem;
+    }
+
+    .currency-selector {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .currency-selector label {
+      margin-right: 1rem;
+      margin-bottom: 0;
+    }
+    
+    .currency-selector select {
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      background-color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      min-width: 120px;
+    }
+    
+    .currency-selector select:focus {
+      border-color: #007aff;
+      outline: none;
+    }
+    
+    .conversion-result {
+      font-size: 1.2rem !important;
+      font-weight: 500;
+      padding: 0.75rem;
+      background-color: #f5f9ff;
+      border-radius: 12px;
+      border: 1px solid #deeaff;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .conversion-success {
+      background-color: #e6f9e6;
+      border: 1px solid #b2e2b2;
+    }
+    
+    .conversion-error {
+      background-color: #ffebeb;
+      border: 1px solid #ffb2b2;
+    }
+    
+    .rate-display {
+      font-size: 0.9rem;
+      color: #666;
+      font-weight: normal;
+    }
+    
+    .rate-input-group {
+      display: flex;
+      align-items: center;
+    }
+    
+    .rate-input-group input {
+      flex: 1;
+      border-radius: 12px 0 0 12px;
+      border-right: none;
+    }
+    
+    .refresh-btn {
+      width: auto;
+      padding: 0.75rem 0.75rem;
+      border-radius: 0 12px 12px 0;
+      background-color: #5ac8fa;
+    }
+    
+    .refresh-btn:hover {
+      background-color: #4bb8ea;
+    }
+    
+    .refresh-all-container {
+      grid-column: span 2;
+      margin-top: 0.5rem;
+    }
+    
+    .refresh-all-btn {
+      background-color: #34c759;
+    }
+    
+    .refresh-all-btn:hover {
+      background-color: #30b753;
+    }
+    
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    .rate-updated {
+      animation: flash 1s;
+    }
+    
+    @keyframes flash {
+      0%, 100% { background-color: transparent; }
+      50% { background-color: rgba(52, 199, 89, 0.2); }
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .rate-input-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+    
+    .rate-input-container input {
+      flex-grow: 1;
+    }
+    
+    .refresh-btn {
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .refresh-btn:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .rate-source-info {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 4px;
+    }
+    
+    .section-header h2 {
+      margin-bottom: 0;
+    }
+    
+    .toggle-btn {
+      width: auto;
+      padding: 0.25rem 0.5rem;
+      background: none;
+      color: #007aff;
+      border: 1px solid #007aff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .toggle-btn:hover {
+      background-color: rgba(0, 122, 255, 0.1);
+    }
+    
+    .toggle-btn.open {
+      transform: rotate(180deg);
+    }
+    
+    /* Info Button and Modal Styles */
+    .header-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    
+    h1 {
+      text-align: center;
+      margin: 0 auto;
+    }
+    
+    .info-btn {
+      width: auto;
+      height: auto;
+      padding: 0.5rem;
+      font-size: 1.2rem;
+      border-radius: 50%;
+      background-color: #5ac8fa;
+      color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      overflow: auto;
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 85%;
+      position: relative;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #999;
+      cursor: pointer;
+    }
+    
+    .close-modal:hover {
+      color: #333;
+    }
+    
+    .rate-info-item {
+      margin: 0.8rem 0;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .rate-label {
+      font-weight: 500;
+    }
+    
+    #rateUpdateTime {
+      margin-top: 1.5rem;
+      color: #666;
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+    
+    #rateSources {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+    
+    #rateSources p {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    #rateSources ul {
+      padding-left: 1.5rem;
+    }
+    
+    #rateSources li {
+      margin-bottom: 0.3rem;
+    }
+    
+    #rateSources a {
+      color: #007aff;
+      text-decoration: none;
+    }
+    
+    #rateSources a:hover {
+      text-decoration: underline;
+    }
+    
+    .tool-instructions {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #eee;
+    }
+    
+    .tool-instructions h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    
+    .tool-instructions h4 {
+      font-size: 1.1rem;
+      margin: 1.25rem 0 0.5rem;
+      color: #444;
+    }
+    
+    .tool-instructions p, 
+    .tool-instructions li {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+    
+    .tool-instructions ol, 
+    .tool-instructions ul {
+      padding-left: 1.5rem;
+    }
+    
+    .conversion-notification {
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      display: none;
+    }
+    
+    .success-notification {
+      background-color: #e6f9e6;
+      border: 1px solid #b2e2b2;
+      color: #267a2d;
+    }
+    
+    .error-notification {
+      background-color: #ffebeb;
+      border: 1px solid #ffb2b2;
+      color: #d42f2f;
+    }
+
+    @media (max-width: 480px) {
+      .exchange-rates-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Auction Price Helper</h1>
-    <div id="exchangeNotification">✅ CNY exchange rate automatically retrieved.</div>
-
-    <div class="form-group">
-      <label for="exchangeRate">CNY to USD Exchange Rate:</label>
-      <input type="number" id="exchangeRate" value="0.138" />
+    <div class="header-container">
+      <h1>Auction Price Helper</h1>
+      <button id="infoButton" class="info-btn">ⓘ</button>
+    </div>
+    <div id="exchangeNotification" style="display: none; padding: 0.75rem; margin: 0.5rem auto 1rem; border-radius: 8px; font-size: 0.9rem; text-align: center; background-color: #f0f0f0; color: #555; max-width: 80%; clear: both;"></div>
+    
+    <!-- Exchange Rate Info Modal -->
+    <div id="infoModal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h3>Live Exchange Rates</h3>
+        <div id="rateInfo">
+          <div class="rate-info-item">
+            <span class="rate-label">CNY to USD:</span>
+            <span id="cnyUsdRateInfo">0.13905</span>
+          </div>
+          <div class="rate-info-item">
+            <span class="rate-label">USD to ETH:</span>
+            <span id="ethRateInfo">Loading...</span>
+          </div>
+          <div class="rate-info-item">
+            <span class="rate-label">USD to LTC:</span>
+            <span id="ltcRateInfo">Loading...</span>
+          </div>
+          <div class="rate-info-item">
+            <span class="rate-label">USD to BTC:</span>
+            <span id="btcRateInfo">Loading...</span>
+          </div>
+          <div class="rate-info-item">
+            <span class="rate-label">USD to EUR:</span>
+            <span id="eurRateInfo">Loading...</span>
+          </div>
+        </div>
+        <div id="rateUpdateTime">Last updated: Fetching...</div>
+        <div id="rateSources">
+          <p>Data Sources:</p>
+          <ul>
+            <li>CNY to USD rate: <span id="rateSourceInfo">Source: Exchange Rate API (updates every 2 hours)</span></li>
+            <li>Cryptocurrency rates: <a href="https://www.coingecko.com/" target="_blank">CoinGecko</a></li>
+            <li>EUR rates: <a href="https://www.exchangerate-api.com/" target="_blank">ExchangeRate-API</a></li>
+          </ul>
+        </div>
+        
+        <div class="tool-instructions">
+          <h3>About This Tool</h3>
+          <p>The Auction Price Helper calculates pricing for items purchased in CNY, converting them to various currencies with automatic fee calculations.</p>
+          
+          <h4>How It Works:</h4>
+          <ol>
+            <li>Enter the CNY to USD exchange rate (auto-fetched by default)</li>
+            <li>Add items to your shopping cart with their CNY prices</li>
+            <li>Fees are automatically calculated:
+              <ul>
+                <li>Items ≥ 200 CNY: 10% fee added</li>
+                <li>Items < 200 CNY: 20 CNY flat fee added</li>
+              </ul>
+            </li>
+            <li>Select your desired currency from the dropdown to see converted values</li>
+          </ol>
+          
+          <h4>Values Explained:</h4>
+          <ul>
+            <li><strong>CNY:</strong> Base price of all items before fees</li>
+            <li><strong>Total Fees:</strong> Sum of all applied fees</li>
+            <li><strong>Total CNY:</strong> Base price + fees</li>
+            <li><strong>USD:</strong> Total CNY converted to US Dollars</li>
+            <li><strong>FG:</strong> Converted to Forum Gold (game currency)</li>
+            <li><strong>ETH/LTC/BTC:</strong> Converted to cryptocurrency using live rates</li>
+            <li><strong>EUR:</strong> Converted to Euros using live rates</li>
+          </ul>
+          
+          <p>You can add up to 10 items to your cart. Each item will have fees calculated separately based on its price.</p>
+          
+          <h4>FG Conversion:</h4>
+          <p>The FG conversion uses both the USD per 3/20/20 SC and FG per 3/20/20 SC ratios. These values can be adjusted by clicking the dropdown arrow next to "FG Conversion Rates".</p>
+        </div>
+      </div>
     </div>
 
     <div class="form-group">
-      <label for="itemPrices">Shopping Cart (up to 8 items):</label>
+      <label for="exchangeRate">CNY to USD Exchange Rate:</label>
+      <div class="rate-input-container">
+        <input type="number" id="exchangeRate" value="0.13881" step="any" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="itemPrices">Shopping Cart (up to 10 items):</label>
       <div id="itemPrices"></div>
       <button id="addItemBtn">+ Add Item</button>
     </div>
 
-    <div class="form-group">
-      <label for="cnyValue">CNY Total + Fees:</label>
-      <input type="number" id="cnyValue" />
-    </div>
+    <input type="hidden" id="cnyValue" />
 
-    <div class="form-group">
-      <label for="usdPer32020">$ per 3/20/20 SC:</label>
-      <input type="number" id="usdPer32020" value="42" />
+    <div class="section-header">
+      <h2>FG Conversion Rates</h2>
+      <button id="toggleFGRates" class="toggle-btn" aria-label="Toggle FG Conversion Rates">▼</button>
     </div>
-
-    <div class="form-group">
-      <label for="fgPer32020">FG per 3/20/20 SC:</label>
-      <input type="number" id="fgPer32020" value="6200" />
+    <div id="fgRatesSection" class="exchange-rates-grid" style="display: none;">
+      <div class="form-group">
+        <label for="usdPer32020">$ per 3/20/20 SC:</label>
+        <input type="number" id="usdPer32020" value="42" />
+      </div>
+      <div class="form-group">
+        <label for="fgPer32020">FG per 3/20/20 SC:</label>
+        <input type="number" id="fgPer32020" value="6200" />
+      </div>
+    </div>
+    
+    <!-- Hidden inputs for conversion rates -->
+    <div style="display: none;">
+      <input type="number" id="usdToEth" value="0.00033" step="0.000001" />
+      <input type="number" id="usdToLtc" value="0.013" step="0.0001" />
+      <input type="number" id="usdToBtc" value="0.000016" step="0.0000001" />
+      <input type="number" id="usdToEur" value="0.92" step="0.01" />
     </div>
 
     <hr />
     <div id="results">
+      <p>CNY: <span id="baseCny">-</span></p>
+      <p>Total Fees: <span id="totalFees">-</span></p>
       <p>Total CNY: <span id="totalCny">-</span></p>
-      <p>FG: <span id="fgResult">-</span></p>
-      <p>USD: <span id="usdResult">-</span></p>
+      
+      <div class="currency-selector">
+        <label for="currencySelect">Convert to:</label>
+        <select id="currencySelect">
+          <option value="usd">USD</option>
+          <option value="fg">FG</option>
+          <option value="eth">ETH</option>
+          <option value="ltc">LTC</option>
+          <option value="btc">BTC</option>
+          <option value="eur">EUR</option>
+        </select>
+      </div>
+      
+      <p class="conversion-result" id="conversionResult">USD: <span id="displayedResult">-</span></p>
+      <div id="conversionNotification" class="conversion-notification"></div>
     </div>
     <p style="text-align:center; font-size: 0.9rem; margin-top: 1rem; color: #888;">
-      Designed by <a href="https://forums.d2jsp.org/user.php?i=1201392" target="_blank" style="color: #007aff; text-decoration: none; font-weight: 500;">Ezpk107</a>
+      Designed by <a href="https://forums.d2jsp.org/user.php?i=1201392" target="_blank" style="color: #007aff; text-decoration: none; font-weight: 500;">Ezpk107</a> <span style="margin-left: 10px;">V 3.0</span>
     </p>
   </div>
 
 <script>
   window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      const notice = document.getElementById('exchangeNotification');
-      if (notice) notice.style.display = 'block';
-    }, 500);
+    document.getElementById('exchangeRate').value = "0.13881";
+    if (document.getElementById('cnyUsdRateInfo')) {
+      document.getElementById('cnyUsdRateInfo').textContent = "0.13881";
+    }
+    
+    const rateUpdateTime = document.getElementById('rateUpdateTime');
+    if (rateUpdateTime) {
+      rateUpdateTime.textContent = "Last checked: Fetching... (rates update once per day)";
+    }
 
     const itemPrices = document.getElementById('itemPrices');
     const addItemBtn = document.getElementById('addItemBtn');
+    const currencySelect = document.getElementById('currencySelect');
     let itemCount = 0;
-    const maxItems = 8;
+    const maxItems = 10;
 
     function addItemField() {
       if (itemCount >= maxItems) return;
@@ -243,6 +713,8 @@
     function updateCnyTotal() {
       const wrappers = itemPrices.querySelectorAll('.item-wrapper');
       let totalCny = 0;
+      let baseCnyTotal = 0;
+      let totalFees = 0;
 
       wrappers.forEach(wrapper => {
         const input = wrapper.querySelector('input');
@@ -251,7 +723,7 @@
         let fee = 0;
         let note = '';
 
-        if (base >= 250) {
+        if (base >= 200) {
           fee = base * 0.10;
           note = '+10% fee applied';
         } else if (base > 0) {
@@ -260,28 +732,657 @@
         }
 
         feeNote.textContent = note;
+        baseCnyTotal += base;
+        totalFees += fee;
         totalCny += base + fee;
       });
 
       document.getElementById('cnyValue').value = totalCny.toFixed(2);
+      document.getElementById('baseCny').textContent = baseCnyTotal.toFixed(2);
+      document.getElementById('totalFees').textContent = totalFees.toFixed(2);
       document.getElementById('totalCny').textContent = totalCny.toFixed(2);
 
+      calculateConversions(totalCny);
+    }
+    
+    function calculateConversions(totalCny) {
       const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 0;
+      
+      const cnyUsdRateInfo = document.getElementById('cnyUsdRateInfo');
+      if (cnyUsdRateInfo) {
+        cnyUsdRateInfo.textContent = exchangeRate.toString();
+      }
+      
       const usdPer32020 = parseFloat(document.getElementById('usdPer32020').value) || 0;
       const fgPer32020 = parseFloat(document.getElementById('fgPer32020').value) || 0;
-
+      const usdToEth = parseFloat(document.getElementById('usdToEth').value) || 0;
+      const usdToLtc = parseFloat(document.getElementById('usdToLtc').value) || 0;
+      const usdToBtc = parseFloat(document.getElementById('usdToBtc').value) || 0;
+      const usdToEur = parseFloat(document.getElementById('usdToEur').value) || 0;
+      
       const usdTotal = totalCny * exchangeRate;
-      const fgTotal = usdPer32020 && fgPer32020 ? (usdTotal / usdPer32020) * fgPer32020 : 0;
-
-      document.getElementById('usdResult').textContent = usdTotal.toFixed(2);
-      document.getElementById('fgResult').textContent = Math.round(fgTotal).toLocaleString();
+      const fgTotal = (usdPer32020 && fgPer32020) ? (usdTotal / usdPer32020) * fgPer32020 : 0;
+      const ethTotal = usdTotal * usdToEth;
+      const ltcTotal = usdTotal * usdToLtc;
+      const btcTotal = usdTotal * usdToBtc;
+      const eurTotal = usdTotal * usdToEur;
+      
+      updateSelectedCurrency(usdTotal, fgTotal, ethTotal, ltcTotal, btcTotal, eurTotal);
+    }
+    
+    function updateSelectedCurrency(usd, fg, eth, ltc, btc, eur) {
+      const selected = currencySelect.value;
+      const resultDisplay = document.getElementById('displayedResult');
+      const resultContainer = document.getElementById('conversionResult');
+      const notification = document.getElementById('conversionNotification');
+      
+      resultContainer.classList.remove('conversion-success', 'conversion-error');
+      notification.classList.remove('success-notification', 'error-notification');
+      notification.style.display = 'none';
+      
+      let success = true;
+      let message = '';
+      const ethRate = parseFloat(document.getElementById('usdToEth').value) || 0;
+      const ltcRate = parseFloat(document.getElementById('usdToLtc').value) || 0;
+      const btcRate = parseFloat(document.getElementById('usdToBtc').value) || 0;
+      const eurRate = parseFloat(document.getElementById('usdToEur').value) || 0;
+      
+      switch(selected) {
+        case 'usd':
+          resultDisplay.textContent = usd.toFixed(2);
+          document.getElementById('conversionResult').innerHTML = `USD: <span id="displayedResult">${usd.toFixed(2)}</span>`;
+          message = '✅ USD conversion successful';
+          break;
+        case 'fg':
+          resultDisplay.textContent = Math.round(fg).toLocaleString();
+          document.getElementById('conversionResult').innerHTML = `FG: <span id="displayedResult">${Math.round(fg).toLocaleString()}</span>`;
+          if (fg === 0 && usd > 0) {
+            success = false;
+            message = '❌ FG conversion failed. Check 3/20/20 SC conversion rates.';
+          } else {
+            message = '✅ FG conversion successful';
+          }
+          break;
+        case 'eth':
+          resultDisplay.textContent = eth.toFixed(6);
+          document.getElementById('conversionResult').innerHTML = `
+            <div>ETH: <span id="displayedResult">${eth.toFixed(6)}</span></div>
+            <div class="rate-display">Rate: ${ethRate.toFixed(6)}</div>
+          `;
+          if (eth === 0 && usd > 0) {
+            success = false;
+            message = '❌ ETH conversion failed. Check USD to ETH rate.';
+          } else {
+            message = '✅ ETH conversion successful';
+          }
+          break;
+        case 'ltc':
+          resultDisplay.textContent = ltc.toFixed(5);
+          document.getElementById('conversionResult').innerHTML = `
+            <div>LTC: <span id="displayedResult">${ltc.toFixed(5)}</span></div>
+            <div class="rate-display">Rate: ${ltcRate.toFixed(5)}</div>
+          `;
+          if (ltc === 0 && usd > 0) {
+            success = false;
+            message = '❌ LTC conversion failed. Check USD to LTC rate.';
+          } else {
+            message = '✅ LTC conversion successful';
+          }
+          break;
+        case 'btc':
+          resultDisplay.textContent = btc.toFixed(8);
+          document.getElementById('conversionResult').innerHTML = `
+            <div>BTC: <span id="displayedResult">${btc.toFixed(8)}</span></div>
+            <div class="rate-display">Rate: ${btcRate.toFixed(8)}</div>
+          `;
+          if (btc === 0 && usd > 0) {
+            success = false;
+            message = '❌ BTC conversion failed. Check USD to BTC rate.';
+          } else {
+            message = '✅ BTC conversion successful';
+          }
+          break;
+        case 'eur':
+          resultDisplay.textContent = eur.toFixed(2);
+          document.getElementById('conversionResult').innerHTML = `
+            <div>EUR: <span id="displayedResult">${eur.toFixed(2)}</span></div>
+            <div class="rate-display">Rate: ${eurRate.toString()}</div>
+          `;
+          if (eur === 0 && usd > 0) {
+            success = false;
+            message = '❌ EUR conversion failed. Check USD to EUR rate.';
+          } else {
+            message = '✅ EUR conversion successful';
+          }
+          break;
+      }
+      
+      if (message) {
+        notification.textContent = message;
+        notification.style.display = 'block';
+        
+        if (success) {
+          resultContainer.classList.add('conversion-success');
+          notification.classList.add('success-notification');
+        } else {
+          resultContainer.classList.add('conversion-error');
+          notification.classList.add('error-notification');
+        }
+      }
+      
+      const displayedResult = document.getElementById('displayedResult');
+      if (displayedResult) {
+        displayedResult.style.fontWeight = '600';
+        displayedResult.style.color = '#007aff';
+      }
     }
 
+    let lastUpdateTime = null;
+    
+    async function fetchCnyToUsdRateFrequent() {
+      try {
+        const input = document.getElementById('exchangeRate');
+        const cnyUsdRateInfo = document.getElementById('cnyUsdRateInfo');
+        const notification = document.getElementById('exchangeNotification');
+        
+        if (notification) {
+          notification.textContent = 'Fetching CNY to USD exchange rate...';
+          notification.className = 'notification';
+          notification.style.backgroundColor = '#e3f2fd';
+          notification.style.color = '#1565c0';
+          notification.style.display = 'block';
+        }
+        
+        const rateSourcesElement = document.querySelector('#rateSources li:first-child');
+        if (rateSourcesElement) {
+          rateSourcesElement.innerHTML = 'CNY to USD rate: <a href="#" target="_blank">Exchange Rate API</a> (updates every 2 hours)';
+        }
+        
+        const apiKey = '{{FREECURRENCYAPI_KEY}}';
+        const response = await fetch(`https://api.freecurrencyapi.com/v1/latest?apikey=${apiKey}&currencies=USD&base_currency=CNY`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data && data.data && data.data.USD) {
+          const rate = data.data.USD;
+          
+          if (input && cnyUsdRateInfo) {
+            const rateDisplay = rate.toString();
+            input.value = rateDisplay;
+            cnyUsdRateInfo.textContent = rateDisplay;
+            
+            if (notification) {
+              notification.textContent = `✅ CNY to USD Conversion automatically received`;
+              notification.className = 'notification success-notification';
+              notification.style.backgroundColor = '#e8f5e9';
+              notification.style.color = '#2e7d32';
+              notification.style.display = 'block';
+            }
+            
+            updateCnyTotal();
+            
+            const rateUpdateTime = document.getElementById('rateUpdateTime');
+            if (rateUpdateTime) {
+              const now = new Date();
+              lastUpdateTime = now;
+              rateUpdateTime.textContent = `Last updated: ${now.toLocaleString()} (updates every 2 hours)`;
+            }
+            
+            return true;
+          }
+        } else {
+          throw new Error('Invalid data format received from API');
+        }
+      } catch (error) {
+        console.error('Error fetching CNY to USD rate:', error);
+        return false;
+      }
+    }
+    
+    async function fetchCnyToUsdRate() {
+      try {
+        const input = document.getElementById('exchangeRate');
+        const cnyUsdRateInfo = document.getElementById('cnyUsdRateInfo');
+        const notification = document.getElementById('exchangeNotification');
+        
+        const primaryApiSuccess = await fetchCnyToUsdRateFrequent();
+        if (primaryApiSuccess) {
+          return;
+        }
+        
+        const rateSourcesElement = document.querySelector('#rateSources li:first-child');
+        if (rateSourcesElement) {
+          rateSourcesElement.innerHTML = 'CNY to USD rate: <a href="https://open.er-api.com/" target="_blank">Open Exchange Rates API</a> (updates daily)';
+        }
+        
+        if (notification) {
+          notification.textContent = 'Fetching CNY to USD rate from Open Exchange Rates API...';
+          notification.className = 'notification';
+          notification.style.backgroundColor = '#e3f2fd';
+          notification.style.color = '#1565c0';
+          notification.style.display = 'block';
+        }
+        const fetchTimeout = setTimeout(() => {
+          if (notification) {
+            notification.textContent = '✅ Using CNY to USD rate: 0.13881';
+            notification.className = 'notification success-notification';
+            notification.style.backgroundColor = '#e8f5e9';
+            notification.style.color = '#2e7d32';
+          }
+        }, 3000);
+        
+        // Fetch from Open Exchange Rates API (more decimal places)
+        const response = await fetch('https://open.er-api.com/v6/latest/CNY');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        clearTimeout(fetchTimeout);
+        
+        if (data && data.rates && data.rates.USD) {
+          const rate = data.rates.USD;
+          
+          if (input && cnyUsdRateInfo) {
+            const rateDisplay = rate.toString();
+            input.value = rateDisplay;
+            cnyUsdRateInfo.textContent = rateDisplay;
+            
+            if (notification) {
+              notification.textContent = `✅ CNY to USD Conversion automatically received`;
+              notification.className = 'notification success-notification';
+              notification.style.backgroundColor = '#e8f5e9';
+              notification.style.color = '#2e7d32';
+              notification.style.display = 'block';
+            }
+            
+            updateCnyTotal();
+            
+            const rateUpdateTime = document.getElementById('rateUpdateTime');
+            if (rateUpdateTime) {
+              if (data.time_last_update_utc) {
+                lastUpdateTime = new Date(data.time_last_update_utc);
+                let nextUpdateInfo = "";
+                if (data.time_next_update_utc) {
+                  nextUpdateInfo = `, next update: ${data.time_next_update_utc}`;
+                }
+                rateUpdateTime.textContent = `Last updated by API: ${data.time_last_update_utc}${nextUpdateInfo}`;
+              } else {
+                // Fallback to current time if API doesn't provide timestamp
+                const now = new Date();
+                lastUpdateTime = now;
+                rateUpdateTime.textContent = `Last checked: ${now.toLocaleTimeString()} (rates update daily)`;
+              }
+            }
+          }
+        } else {
+          throw new Error('Invalid data format received from API');
+        }
+      } catch (error) {
+        console.error('Error fetching CNY to USD rate:', error);
+        const notification = document.getElementById('exchangeNotification');
+        if (notification) {
+          notification.textContent = '⚠️ Could not connect to exchange rate APIs. Using default CNY to USD rate: 0.13881';
+          notification.className = 'notification error-notification';
+          notification.style.backgroundColor = '#ffebee';
+          notification.style.color = '#c62828';
+          notification.style.display = 'block';
+        }
+      }
+    }
+    
+    // Function to fetch live rates from CoinGecko API
+    async function fetchCryptoRate(crypto, targetInput) {
+      try {
+        const input = document.getElementById(targetInput);
+        let rateInfoElement = null;
+        
+        // Set loading state for the input
+        if (input.parentElement) {
+          input.parentElement.classList.add('loading');
+        }
+        
+        // Also update the rate info element if it exists
+        if (crypto === 'ethereum') {
+          rateInfoElement = document.getElementById('ethRateInfo');
+        } else if (crypto === 'litecoin') {
+          rateInfoElement = document.getElementById('ltcRateInfo');
+        } else if (crypto === 'bitcoin') {
+          rateInfoElement = document.getElementById('btcRateInfo');
+        }
+        
+        if (rateInfoElement) {
+          rateInfoElement.textContent = 'Updating...';
+        }
+        
+        const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${crypto}&vs_currencies=usd`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        if (!data || !data[crypto] || !data[crypto].usd) {
+          throw new Error('Invalid data format received from API');
+        }
+        
+        // Calculate exchange rate (1 USD to Crypto)
+        const rate = 1 / data[crypto].usd;
+        input.value = rate.toFixed(10);
+        input.classList.add('rate-updated');
+        
+        // Remove the loading state
+        if (input.parentElement) {
+          input.parentElement.classList.remove('loading');
+        }
+        
+        // Update the rate info in the modal
+        if (rateInfoElement) {
+          rateInfoElement.textContent = rate.toFixed(8);
+        }
+        
+        // Remove the animation class after animation completes
+        setTimeout(() => {
+          input.classList.remove('rate-updated');
+        }, 1000);
+        
+        // Update calculations
+        updateCnyTotal();
+        
+        // Update the last update time
+        lastUpdateTime = new Date();
+        updateModalTimestamp();
+        
+        return true;
+      } catch (error) {
+        console.error(`Error fetching ${crypto} rate:`, error);
+        if (input.parentElement) {
+          input.parentElement.classList.remove('loading');
+        }
+        
+        // Update the rate info in the modal to show error
+        if (rateInfoElement) {
+          rateInfoElement.textContent = 'Error fetching rate';
+        }
+        
+        alert(`Failed to fetch ${crypto.toUpperCase()} rate. Please try again later.`);
+        return false;
+      }
+    }
+    
+    // Function to fetch EUR rate
+    async function fetchEuroRate() {
+      try {
+        const input = document.getElementById('usdToEur');
+        const rateInfoElement = document.getElementById('eurRateInfo');
+        
+        // Update source in modal
+        const rateSourcesElement = document.querySelector('#rateSources li:nth-child(3)');
+        if (rateSourcesElement) {
+          rateSourcesElement.innerHTML = 'EUR rates: <a href="#" target="_blank">Exchange Rate API</a> (updates every 2 hours)';
+        }
+        
+        if (input.parentElement) {
+          input.parentElement.classList.add('loading');
+        }
+        
+        if (rateInfoElement) {
+          rateInfoElement.textContent = 'Updating...';
+        }
+        
+        // Use exchange rate API for EUR conversion
+        const apiKey = '{{FREECURRENCYAPI_KEY}}'; // API key from environment
+        const response = await fetch(`https://api.freecurrencyapi.com/v1/latest?apikey=${apiKey}&currencies=EUR&base_currency=USD`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        if (!data || !data.data || !data.data.EUR) {
+          throw new Error('Invalid data format received from API');
+        }
+        
+        // Get EUR rate with full precision
+        const rate = data.data.EUR;
+        input.value = rate.toString(); // Use full precision
+        input.classList.add('rate-updated');
+        
+        // Remove the loading state
+        if (input.parentElement) {
+          input.parentElement.classList.remove('loading');
+        }
+        
+        // Update the rate info in the modal with full precision
+        if (rateInfoElement) {
+          rateInfoElement.textContent = rate.toString();
+        }
+        
+        // Remove the animation class after animation completes
+        setTimeout(() => {
+          input.classList.remove('rate-updated');
+        }, 1000);
+        
+        // Update calculations
+        updateCnyTotal();
+        
+        // Update the last update time
+        lastUpdateTime = new Date();
+        updateModalTimestamp();
+        
+        return true;
+      } catch (error) {
+        console.error('Error fetching EUR rate from primary API:', error);
+        
+        // Try secondary exchange rate API
+        try {
+          const input = document.getElementById('usdToEur');
+          const rateInfoElement = document.getElementById('eurRateInfo');
+          
+          // Update source in modal for secondary API
+          const rateSourcesElement = document.querySelector('#rateSources li:nth-child(3)');
+          if (rateSourcesElement) {
+            rateSourcesElement.innerHTML = 'EUR rates: <a href="https://open.er-api.com/" target="_blank">Open Exchange Rates API</a> (secondary)';
+          }
+          
+          const response = await fetch('https://open.er-api.com/v6/latest/USD');
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          if (!data || !data.rates || !data.rates.EUR) {
+            throw new Error('Invalid data format received from secondary API');
+          }
+          
+          // Get EUR rate
+          const rate = data.rates.EUR;
+          input.value = rate.toString();
+          input.classList.add('rate-updated');
+          
+          // Remove the loading state
+          if (input.parentElement) {
+            input.parentElement.classList.remove('loading');
+          }
+          
+          // Update the rate info in the modal
+          if (rateInfoElement) {
+            rateInfoElement.textContent = rate.toString();
+          }
+          
+          // Remove the animation class after animation completes
+          setTimeout(() => {
+            input.classList.remove('rate-updated');
+          }, 1000);
+          
+          // Update calculations
+          updateCnyTotal();
+          
+          // Update the last update time
+          lastUpdateTime = new Date();
+          updateModalTimestamp();
+          
+          return true;
+        } catch (secondaryError) {
+          console.error('Error fetching EUR rate from secondary API:', secondaryError);
+          
+          const input = document.getElementById('usdToEur');
+          if (input.parentElement) {
+            input.parentElement.classList.remove('loading');
+          }
+          
+          // Update the rate info in the modal to show error
+          const rateInfoElement = document.getElementById('eurRateInfo');
+          if (rateInfoElement) {
+            rateInfoElement.textContent = 'Error fetching rate';
+          }
+          
+          return false;
+        }
+      }
+    }
+    
+    // Function to update the timestamp in the modal
+    function updateModalTimestamp() {
+      const timestampElement = document.getElementById('rateUpdateTime');
+      if (timestampElement && lastUpdateTime) {
+        const formattedDate = lastUpdateTime.toLocaleDateString();
+        const formattedTime = lastUpdateTime.toLocaleTimeString();
+        timestampElement.textContent = `Last updated: ${formattedDate} at ${formattedTime}`;
+      }
+    }
+    
+    // Function to refresh all rates
+    async function refreshAllRates() {
+      const notification = document.getElementById('exchangeNotification');
+      notification.textContent = 'Updating exchange rates...';
+      notification.style.display = 'block';
+      notification.className = '';
+      
+      // Fetch all rates in parallel
+      const results = await Promise.all([
+        fetchCryptoRate('ethereum', 'usdToEth'),
+        fetchCryptoRate('litecoin', 'usdToLtc'),
+        fetchCryptoRate('bitcoin', 'usdToBtc'),
+        fetchEuroRate()
+      ]);
+      
+      // Check if all succeeded
+      const allSucceeded = results.every(result => result === true);
+      
+      if (allSucceeded) {
+        notification.textContent = '✅ CNY to USD Conversion automatically received';
+        notification.className = 'success-notification';
+        notification.style.backgroundColor = '#e8f5e9';
+        notification.style.color = '#2e7d32';
+      } else {
+        notification.textContent = '❌ Failed to fetch all exchange rates. Some conversions may be inaccurate.';
+        notification.className = 'error-notification';
+        notification.style.backgroundColor = '#ffebee';
+        notification.style.color = '#c62828';
+      }
+    }
+    
+    // Add event listeners for inputs
+    document.getElementById('exchangeRate').addEventListener('input', updateCnyTotal);
     document.getElementById('usdPer32020').addEventListener('input', updateCnyTotal);
     document.getElementById('fgPer32020').addEventListener('input', updateCnyTotal);
-    document.getElementById('exchangeRate').addEventListener('input', updateCnyTotal);
+    document.getElementById('usdToEth').addEventListener('input', updateCnyTotal);
+    document.getElementById('usdToLtc').addEventListener('input', updateCnyTotal);
+    document.getElementById('usdToBtc').addEventListener('input', updateCnyTotal);
+    document.getElementById('usdToEur').addEventListener('input', updateCnyTotal);
+    
+    // Currency selection change
+    currencySelect.addEventListener('change', () => {
+      updateCnyTotal();
+    });
+    
+    // FG Rates toggle
+    const toggleFGRates = document.getElementById('toggleFGRates');
+    const fgRatesSection = document.getElementById('fgRatesSection');
+    
+    toggleFGRates.addEventListener('click', () => {
+      const isVisible = fgRatesSection.style.display !== 'none';
+      fgRatesSection.style.display = isVisible ? 'none' : 'grid';
+      toggleFGRates.classList.toggle('open');
+      toggleFGRates.textContent = isVisible ? '▼' : '▲';
+    });
+    
+    // Info Modal setup
+    const infoModal = document.getElementById('infoModal');
+    const infoBtn = document.getElementById('infoButton');
+    const closeBtn = document.querySelector('.close-modal');
+    
+    // Open modal when info button is clicked
+    infoBtn.addEventListener('click', () => {
+      infoModal.style.display = 'block';
+      // Refresh the info in the modal
+      const ethRate = document.getElementById('usdToEth').value;
+      const ltcRate = document.getElementById('usdToLtc').value;
+      const btcRate = document.getElementById('usdToBtc').value;
+      const eurRate = document.getElementById('usdToEur').value;
+      
+      document.getElementById('ethRateInfo').textContent = parseFloat(ethRate).toFixed(8);
+      document.getElementById('ltcRateInfo').textContent = parseFloat(ltcRate).toFixed(5);
+      document.getElementById('btcRateInfo').textContent = parseFloat(btcRate).toFixed(8);
+      document.getElementById('eurRateInfo').textContent = parseFloat(eurRate).toFixed(4);
+      
+      updateModalTimestamp();
+    });
+    
+    // Close modal when X is clicked
+    closeBtn.addEventListener('click', () => {
+      infoModal.style.display = 'none';
+    });
+    
+    // Close modal when clicking outside the modal
+    window.addEventListener('click', (event) => {
+      if (event.target === infoModal) {
+        infoModal.style.display = 'none';
+      }
+    });
+    
     addItemBtn.addEventListener('click', addItemField);
-    addItemField();
+    
+    // Start with an empty cart (no initial item field)
+    
+    // Show immediate notification and set current date
+    const notification = document.getElementById('exchangeNotification');
+    const now = new Date();
+    if (notification) {
+      notification.textContent = "Fetching live rates from APIs...";
+      notification.className = 'notification';
+      notification.style.backgroundColor = '#e3f2fd';
+      notification.style.color = '#1565c0';
+      notification.style.display = "block";
+    }
+    
+    // Set default value but don't claim it's successful yet
+    document.getElementById('exchangeRate').value = "0.14";
+    if (document.getElementById('cnyUsdRateInfo')) {
+      document.getElementById('cnyUsdRateInfo').textContent = "0.14";
+    }
+    
+    // Initialize exchange rate fetching
+    fetchCnyToUsdRate();
+    
+    // Refresh cryptocurrency and EUR rates
+    refreshAllRates();
+    
+    // Update the timestamp regardless of API success
+    setTimeout(() => {
+      const rateUpdateTime = document.getElementById('rateUpdateTime');
+      if (rateUpdateTime && !rateUpdateTime.textContent.includes("updated by API")) {
+        rateUpdateTime.textContent = `Last checked: ${now.toLocaleTimeString()} (rates update daily)`;
+      }
+    }, 2000);
   });
 </script>
 </body>
